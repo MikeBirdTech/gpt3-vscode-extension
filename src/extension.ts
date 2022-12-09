@@ -40,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				model,
 				prompt,
 				max_tokens,
-				temperature,							
+				temperature,
 			});
 
 			const output = response.data.choices[0].text?.trim();

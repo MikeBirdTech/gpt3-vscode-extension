@@ -1,10 +1,7 @@
 # GPT-3 Visual Studio Code Extension README
 
 Stage 1: Running 'Create documentation' when code is highlighted will generate documentation for that code. It will automatically inject it above the highlighted code.
-Defauly key binding set to `alt + d`
-
-
-## Requirements
+Default key binding set to `alt + d`
 
 ## Extension Settings
 Update your `settings.json` file to include the following settings:
@@ -16,7 +13,6 @@ Update your `settings.json` file to include the following settings:
     "GPT3.temperature": 0.7,
 
 ## Known Issues
-
 Things are just getting started
 
 ## Release Notes
