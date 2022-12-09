@@ -1,5 +1,9 @@
 # GPT-3 Visual Studio Code Extension README
 
+## Install the extension
+
+[Marketplace](https://marketplace.visualstudio.com/items?itemName=Arrendy.gpt3-vscode-extension)
+
 Stage 1: Running 'Create documentation' when code is highlighted will generate documentation for that code. It will automatically inject it above the highlighted code.
 Default key binding set to `alt + d`
 
