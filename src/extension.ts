@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
 import { Configuration, OpenAIApi } from "openai";
 
-const getConfValue = <T = string>(key: string) => vscode.workspace.getConfiguration('GPT3').get(key) as T;
+const getConfValue = <T = string>(key: string) => vscode.workspace.getConfiguration('GPT').get(key) as T;
 
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 	console.log('Activated');
 
-	let disposable = vscode.commands.registerCommand('GPT3.createDocs', async () => {
+	let disposable = vscode.commands.registerCommand('GPT.createDocs', async () => {
 		console.log('Running createDocs');
 		const editor = vscode.window.activeTextEditor;
 
