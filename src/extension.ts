@@ -1,26 +1,50 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+import * as dotenv from 'dotenv';
+dotenv.config({path:__dirname+'/../.env'});
 import * as vscode from 'vscode';
+import { Configuration, OpenAIApi } from "openai";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "GPT3" is now active!');
+// This method is called when the extension is activated
+// The extension is activated the very first time the command is executed
+export async function activate(context: vscode.ExtensionContext) {
+	console.log('Activated');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('GPT3.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from GPT-3 A.I. Coding Assistant!');
+	let disposable = vscode.commands.registerCommand('GPT3.createDocs', async () => {
+		console.log('Running createDocs');
+		const editor = vscode.window.activeTextEditor;
+
+		if (editor) {
+			const selectedText = editor.document.getText(editor.selection);
+
+			const prompt = `Create clear and concise documentation for the following code. It must be commented out and use multiple lines for long sentences. 
+			Code: ${selectedText}`;
+
+			const configuration = new Configuration({
+				organization: process.env.OPENAI_ORG,
+				apiKey: process.env.OPENAI_API_KEY,
+			});
+
+			const openai = new OpenAIApi(configuration);
+
+			const response = await openai.createCompletion({
+				model: "text-davinci-003",
+				prompt: `${prompt}`,
+				max_tokens: 250,
+				temperature: 0.4,
+			});
+
+			const output = response.data.choices[0].text?.trim();
+
+			// Start a new edit operation
+			editor.edit((editBuilder) => {
+				// Insert the text at the start of the selection
+				editBuilder.insert(editor.selection.start, `${output}\n`);
+			});
+		}
 	});
 
 	context.subscriptions.push(disposable);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
