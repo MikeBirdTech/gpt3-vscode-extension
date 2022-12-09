@@ -1,8 +1,7 @@
-import * as dotenv from 'dotenv';
-dotenv.config({path:__dirname+'/../.env'});
 import * as vscode from 'vscode';
 import { Configuration, OpenAIApi } from "openai";
 
+const getConfValue = <T = string>(key: string) => vscode.workspace.getConfiguration('GPT3').get(key) as T;
 
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
@@ -21,18 +20,27 @@ export async function activate(context: vscode.ExtensionContext) {
 			Use best practices.
 			Code: ${selectedText}`;
 
+			const model = getConfValue('model');
+			const max_tokens = getConfValue<number>('maxTokens');
+			const temperature = getConfValue<number>('temperature');
+			
+			if (temperature < 0 || temperature > 1) {
+				vscode.window.showInformationMessage("Temperature must be between 0 and 1, please update your settings");
+				return;
+			}
+
 			const configuration = new Configuration({
-				organization: process.env.OPENAI_ORG,
-				apiKey: process.env.OPENAI_API_KEY,
+				organization: getConfValue('openaiOrg'),
+				apiKey: getConfValue('openaiApiKey'),
 			});
 
 			const openai = new OpenAIApi(configuration);
 
 			const response = await openai.createCompletion({
-				model: "text-davinci-003",
-				prompt: `${prompt}`,
-				max_tokens: 250,
-				temperature: 0.4,
+				model,
+				prompt,
+				max_tokens,
+				temperature,							
 			});
 
 			const output = response.data.choices[0].text?.trim();
