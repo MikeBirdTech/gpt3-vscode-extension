@@ -19,6 +19,14 @@
         "command": "GPT3.createDocs",
         "title": "Create documentation"
       }
+    ],
+    "keybindings": [
+      {
+        "command": "GPT3.createDocs",
+        "key": "alt+d",
+        "mac": "cmd+d",
+        "when": "editorTextFocus"
+      }
     ]
   },
   "scripts": {
@@ -53,7 +61,6 @@
   },
   "homepage": "https://github.com/Arrendy/gpt3-vscode-extension#readme",
   "dependencies": {
-    "dotenv": "^16.0.3",
     "openai": "^3.1.0"
   }
 }

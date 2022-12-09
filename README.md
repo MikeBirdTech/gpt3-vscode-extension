@@ -1,19 +1,18 @@
 # GPT-3 Visual Studio Code Extension README
 
 Stage 1: Running 'Create documentation' when code is highlighted will generate documentation for that code. It will automatically inject it above the highlighted code.
-
-
-## Requirements
-
-Set environment variables in a `.env` file in the root directory
-- OPENAI_API_KEY
-- OPENAI_ORG
+Default key binding set to `alt + d`
 
 ## Extension Settings
-None yet
+Update your `settings.json` file to include the following settings:
+
+    "GPT3.openaiOrg": "org-<id>",
+    "GPT3.openaiApiKey": "<API Key>",
+    "GPT3.model": "text-davinci-003",
+    "GPT3.maxTokens": 250,
+    "GPT3.temperature": 0.7,
 
 ## Known Issues
-
 Things are just getting started
 
 ## Release Notes
