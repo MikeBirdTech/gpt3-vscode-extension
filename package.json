@@ -19,6 +19,14 @@
         "command": "GPT3.createDocs",
         "title": "Create documentation"
       }
+    ],
+    "keybindings": [
+      {
+        "command": "GPT3.createDocs",
+        "key": "alt+d",
+        "mac": "cmd+d",
+        "when": "editorTextFocus"
+      }
     ]
   },
   "scripts": {

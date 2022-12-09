@@ -16,7 +16,9 @@ export async function activate(context: vscode.ExtensionContext) {
 		if (editor) {
 			const selectedText = editor.document.getText(editor.selection);
 
-			const prompt = `Create clear and concise documentation for the following code. It must be commented out and use multiple lines for long sentences. 
+			const prompt = `Create clear and concise documentation for the following code. 
+			Every line must be commented out and use multiple lines for long sentences. 
+			Use best practices.
 			Code: ${selectedText}`;
 
 			const configuration = new Configuration({
