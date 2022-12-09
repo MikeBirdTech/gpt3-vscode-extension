@@ -6,11 +6,11 @@ Default key binding set to `alt + d`
 ## Extension Settings
 Update your `settings.json` file to include the following settings:
 
-    "GPT3.openaiOrg": "org-<id>",
-    "GPT3.openaiApiKey": "<API Key>",
-    "GPT3.model": "text-davinci-003",
-    "GPT3.maxTokens": 250,
-    "GPT3.temperature": 0.7,
+    "GPT.openaiOrg": "org-<id>",
+    "GPT.openaiApiKey": "<API Key>",
+    "GPT.model": "text-davinci-003",
+    "GPT.maxTokens": 250,
+    "GPT.temperature": 0.7,
 
 ## Known Issues
 Things are just getting started
