@@ -1,13 +1,21 @@
 {
   "name": "gpt3-vscode-extension",
-  "displayName": "GPT-3 A.I. Coding Assistant",
+  "displayName": "GPT A.I. Coding Assistant",
   "description": "Use GPT-3 to generate documentation and get help debugging your code",
   "version": "0.1.0",
   "engines": {
     "vscode": "^1.74.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "AI",
+    "OpenAI",
+    "GPT-3",
+    "GPT3",
+    "GPT"
   ],
   "activationEvents": [
     "onCommand:GPT.createDocs"
@@ -63,5 +71,7 @@
   "dependencies": {
     "openai": "^3.1.0"
   },
-  "pricing": "Free"
+  "pricing": "Free",
+  "publisher": "Arrendy",
+  "icon": "images/icon.png"
 }
