@@ -1,7 +1,7 @@
 {
   "name": "gpt3-vscode-extension",
   "displayName": "GPT A.I. Coding Assistant",
-  "description": "Use GPT-3 to generate documentation and get help debugging your code",
+  "description": "Use GPT-3 to improve your code and generate documentation!",
   "version": "0.1.0",
   "engines": {
     "vscode": "^1.74.0"
@@ -18,21 +18,32 @@
     "GPT"
   ],
   "activationEvents": [
-    "onCommand:GPT.createDocs"
+    "onCommand:GPT.createDocs",
+    "onCommand:GPT.suggestImprovement"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "GPT.createDocs",
-        "title": "Create documentation"
+        "title": "Create Documentation"
+      },
+      {
+        "command": "GPT.suggestImprovement",
+        "title": "Suggest Improvements"
       }
     ],
     "keybindings": [
       {
         "command": "GPT.createDocs",
         "key": "alt+d",
-        "mac": "cmd+d",
+        "mac": "option+d",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "GPT.suggestImprovement",
+        "key": "alt+i",
+        "mac": "option+i",
         "when": "editorTextFocus"
       }
     ]
