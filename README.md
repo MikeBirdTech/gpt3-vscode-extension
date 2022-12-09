@@ -1,12 +1,20 @@
-# GPT-3 Visual Studio Code Extension README
+# GPT Visual Studio Code Extension README
+Use GPT-3 to be a more efficient programmer!
 
+---
 ## Install the extension
 
 [Marketplace](https://marketplace.visualstudio.com/items?itemName=Arrendy.gpt3-vscode-extension)
 
-Stage 1: Running 'Create documentation' when code is highlighted will generate documentation for that code. It will automatically inject it above the highlighted code.
+---
+## Current functionality
+Running 'Create Documentation' when code is highlighted will generate documentation for that code. It will automatically inject it above the highlighted code.
 Default key binding set to `alt + d`
 
+Running 'Suggest Improvements' will send highlighted code to GPT-3 where it will return suggested code as well as an explanation for why the suggestion is an improvement. The suggested code and explanation will appear in a modal.
+Default key binding set to `alt + i`
+
+---
 ## Extension Settings
 Update your `settings.json` file to include the following settings:
 
@@ -14,11 +22,20 @@ Update your `settings.json` file to include the following settings:
     "GPT.openaiApiKey": "<API Key>",
     "GPT.model": "text-davinci-003",
     "GPT.maxTokens": 250,
-    "GPT.temperature": 0.7,
+    "GPT.temperature": 0.3,
+
+Values can be updated to match your preferences.
+
+---
 
 ## Known Issues
 Things are just getting started
 
+---
+
 ## Release Notes
+### 0.2.0
+Generates code suggestion with explanation for highlighted code.
+
 ### 0.1.0
 Creates documentation for highlighted code.

@@ -52,10 +52,58 @@ export async function activate(context: vscode.ExtensionContext) {
 			// Insert the text at the start of the selection
 			editBuilder.insert(editor.selection.start, `${output}\n`);
 		});
-	}
-	);
+	});
+
+	let suggestImprovement = vscode.commands.registerCommand('GPT.suggestImprovement', async () => {
+		console.log('Running suggestImprovement');
+		const editor = vscode.window.activeTextEditor;
+
+		if (!editor) {
+			return;
+		}
+		const selectedText = editor.document.getText(editor.selection);
+
+		const prompt = `The Original code can be improved. 
+		Provde Suggested code and an explanation for why it is better.
+		Identify efficiency improvements and readability improvements.
+		If there are any bugs in the Original code, explain a solution.
+		The Suggested code must result in the same output as the original code.
+		There should be an empty line between the Suggested code and the explanation.
+		Explain why the code you suggest is better than the original code.
+		Original code: ${selectedText}
+		`;
+
+		const model = getConfValue('model');
+		const max_tokens = getConfValue<number>('maxTokens');
+		const temperature = getConfValue<number>('temperature');
+
+		if (temperature < 0 || temperature > 1) {
+			vscode.window.showInformationMessage("Temperature must be between 0 and 1, please update your settings");
+			return;
+		}
+
+		const configuration = new Configuration({
+			organization: getConfValue('openaiOrg'),
+			apiKey: getConfValue('openaiApiKey'),
+		});
+
+		const openai = new OpenAIApi(configuration);
+
+		const response = await openai.createCompletion({
+			model,
+			prompt,
+			max_tokens,
+			temperature,
+		});
+
+		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
+
+		vscode.window.showInformationMessage(output);
+	});
+
 
 	context.subscriptions.push(createDocumentation);
+	context.subscriptions.push(suggestImprovement);
 }
 
 // This method is called when your extension is deactivated
