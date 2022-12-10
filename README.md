@@ -20,6 +20,9 @@ Default key binding set to `alt + d`
 Running 'Suggest Improvements' will send highlighted code to GPT-3 where it will return suggested code as well as an explanation for why the suggestion is an improvement. The suggested code and explanation will appear in a modal.
 Default key binding set to `alt + i`
 
+Running 'Ask GPT' will open a text input box and the value entered will be sent to GPT for processing. The response will appear in a modal.
+Default key binding set to `alt + g`
+
 ---
 ## Extension Settings
 Update your `settings.json` file to include the following settings:
@@ -40,6 +43,10 @@ Things are just getting started
 ---
 
 ## Release Notes
+
+### 0.3.0
+Send GPT text directly. Ask a question or get clarity in your own words, without leaving your editor.
+
 ### 0.2.0
 Generates code suggestion with explanation for highlighted code.
 
