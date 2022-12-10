@@ -2,6 +2,11 @@
 Use GPT-3 to be a more efficient programmer!
 
 ---
+
+## Requirements
+[Your OpenAI API Key](https://beta.openai.com/signup)
+
+--- 
 ## Install the extension
 
 [Marketplace](https://marketplace.visualstudio.com/items?itemName=Arrendy.gpt3-vscode-extension)
