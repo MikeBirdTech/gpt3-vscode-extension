@@ -81,7 +81,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		if (!editor) {
 			return;
 		}
-
+    
 		vscode.window.showInformationMessage('Generating your suggestion!');
 
 		const selectedText = editor.document.getText(editor.selection);
