@@ -106,9 +106,39 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage(output);
 	});
 
+	let askGPT = vscode.commands.registerCommand('GPT.askGPT', async () => {
+		console.log('Running askGPT');
+
+		const inputBoxOptions = {
+			"title": "Ask GPT!",
+			"prompt": "Enter in the text you would like to send to GPT"
+		}
+		
+		const prompt = await vscode.window.showInputBox(inputBoxOptions);
+
+		if(!prompt) {
+			vscode.window.showInformationMessage('No input received.');
+			return;
+		}
+
+		vscode.window.showInformationMessage('Sending to GPT!');
+
+		const response = await openai.createCompletion({
+			model: config.model,
+			prompt,
+			max_tokens: config.max_tokens,
+			temperature: config.temperature,
+		});
+
+		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
+
+		vscode.window.showInformationMessage(output);
+	});
+
 
 	context.subscriptions.push(createDocumentation);
 	context.subscriptions.push(suggestImprovement);
+	context.subscriptions.push(askGPT);
 }
 
 // This method is called when your extension is deactivated
