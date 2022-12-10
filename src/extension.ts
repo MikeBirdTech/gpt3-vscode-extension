@@ -3,46 +3,66 @@ import { Configuration, OpenAIApi } from "openai";
 
 const getConfValue = <T = string>(key: string) => vscode.workspace.getConfiguration('GPT').get(key) as T;
 
+const initConfig = () => {
+	const config = {
+		"model": getConfValue('model'),
+		"max_tokens": getConfValue<number>('maxTokens'),
+		"temperature": getConfValue<number>('temperature'),
+		"organization":getConfValue('openaiOrg'),
+		"apiKey": getConfValue('openaiApiKey')
+	}
+
+	if (!config.temperature || config.temperature < 0 || config.temperature > 1) {
+		vscode.window.showInformationMessage("Temperature must be between 0 and 1, please update your settings");
+		return;
+	}
+
+	return config;
+}
+
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 	console.log('Activated');
 
+	const config = initConfig();
+	if(!config){
+		return;
+	}
+
+	const openaiConfig = new Configuration({
+		organization: config.organization,
+		apiKey: config.apiKey
+	});
+
+	const openai = new OpenAIApi(openaiConfig);
+
 	let createDocumentation = vscode.commands.registerCommand('GPT.createDocs', async () => {
 		console.log('Running createDocs');
+
 		const editor = vscode.window.activeTextEditor;
 
 		if (!editor) {
 			return;
 		}
+
+		vscode.window.showInformationMessage('Generating your documentation!');
+
 		const selectedText = editor.document.getText(editor.selection);
 
-		const prompt = `Create clear and concise documentation for the following code. 
-			Every line must be commented out and use multiple lines for long sentences. 
-			Use best practices.
-			Code: ${selectedText}`;
+		const prompt = `Write doc comments for the code
+			Code: 
+			${selectedText}
+			
+			Doc comments:
+			`;
 
-		const model = getConfValue('model');
-		const max_tokens = getConfValue<number>('maxTokens');
-		const temperature = getConfValue<number>('temperature');
-
-		if (temperature < 0 || temperature > 1) {
-			vscode.window.showInformationMessage("Temperature must be between 0 and 1, please update your settings");
-			return;
-		}
-
-		const configuration = new Configuration({
-			organization: getConfValue('openaiOrg'),
-			apiKey: getConfValue('openaiApiKey'),
-		});
-
-		const openai = new OpenAIApi(configuration);
 
 		const response = await openai.createCompletion({
-			model,
+			model:config.model,
 			prompt,
-			max_tokens,
-			temperature,
+			max_tokens: config.max_tokens,
+			temperature: config.temperature,
 		});
 
 		const output = response.data.choices[0].text?.trim();
@@ -61,39 +81,24 @@ export async function activate(context: vscode.ExtensionContext) {
 		if (!editor) {
 			return;
 		}
+
+		vscode.window.showInformationMessage('Generating your suggestion!');
+
 		const selectedText = editor.document.getText(editor.selection);
 
-		const prompt = `The Original code can be improved. 
+		const prompt = `Improve the Original code. 
 		Provde Suggested code and an explanation for why it is better.
-		Identify efficiency improvements and readability improvements.
-		If there are any bugs in the Original code, explain a solution.
-		The Suggested code must result in the same output as the original code.
-		There should be an empty line between the Suggested code and the explanation.
-		Explain why the code you suggest is better than the original code.
-		Original code: ${selectedText}
+		Original code: 
+		${selectedText}
+
+		Suggested code:
 		`;
 
-		const model = getConfValue('model');
-		const max_tokens = getConfValue<number>('maxTokens');
-		const temperature = getConfValue<number>('temperature');
-
-		if (temperature < 0 || temperature > 1) {
-			vscode.window.showInformationMessage("Temperature must be between 0 and 1, please update your settings");
-			return;
-		}
-
-		const configuration = new Configuration({
-			organization: getConfValue('openaiOrg'),
-			apiKey: getConfValue('openaiApiKey'),
-		});
-
-		const openai = new OpenAIApi(configuration);
-
 		const response = await openai.createCompletion({
-			model,
+			model: config.model,
 			prompt,
-			max_tokens,
-			temperature,
+			max_tokens: config.max_tokens,
+			temperature: config.temperature,
 		});
 
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
