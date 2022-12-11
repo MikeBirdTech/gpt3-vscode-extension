@@ -1,19 +1,44 @@
 import * as vscode from 'vscode';
 import { Configuration, OpenAIApi } from "openai";
 
+interface Config {
+	model: string,
+	max_tokens: number,
+	temperature: number,
+	apiKey: string,
+	organization?: string
+}
+
 const getConfValue = <T = string>(key: string) => vscode.workspace.getConfiguration('GPT').get(key) as T;
 
 const initConfig = () => {
-	const config = {
+	const config: Config = {
 		"model": getConfValue('model'),
 		"max_tokens": getConfValue<number>('maxTokens'),
 		"temperature": getConfValue<number>('temperature'),
-		"organization":getConfValue('org'),
-		"apiKey": getConfValue('apiKey')
+		"apiKey": getConfValue('apiKey'),
 	};
+
+	const org = getConfValue('org');
+
+	if(org) {
+		config.organization = org;
+	}
 
 	if (!config.temperature || config.temperature < 0 || config.temperature > 1) {
 		vscode.window.showInformationMessage("Temperature must be between 0 and 1, please update your settings");
+		return;
+	}
+	if (!config.max_tokens || config.max_tokens < 1 || config.max_tokens >= 4000) {
+		vscode.window.showInformationMessage("Max tokens must be between 1 and 4000, please update your settings");
+		return;
+	}
+	if (!config.apiKey) {
+		vscode.window.showInformationMessage("OpenAI API Key missing, please update your settings");
+		return;
+	}
+	if (!config.model) {
+		vscode.window.showInformationMessage("GPT Model missing, please update your settings");
 		return;
 	}
 
@@ -31,11 +56,12 @@ export async function activate(context: vscode.ExtensionContext) {
 	}
 
 	const openaiConfig = new Configuration({
-		apiKey: config.apiKey
+		...config
 	});
 
 	const openai = new OpenAIApi(openaiConfig);
 
+	// Create documentation for highlighted code
 	let createDocumentation = vscode.commands.registerCommand('GPT.createDocs', async () => {
 		console.log('Running createDocs');
 
@@ -52,7 +78,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		vscode.window.setStatusBarMessage('Generating your documentation!');
+		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Generating your documentation! $(book)');
 
 		const prompt = `Write doc comments for the code
 			Code: 
@@ -71,13 +97,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		const output = response.data.choices[0].text?.trim();
 
-		// Start a new edit operation
+		// Insert the text at the start of the selection
 		editor.edit((editBuilder) => {
-			// Insert the text at the start of the selection
 			editBuilder.insert(editor.selection.start, `${output}\n`);
 		});
+
+		statusMessage.dispose();
 	});
 
+	// Create a suggested alternative to highlight code with an explanation
 	let suggestImprovement = vscode.commands.registerCommand('GPT.suggestImprovement', async () => {
 		console.log('Running suggestImprovement');
 		const editor = vscode.window.activeTextEditor;
@@ -93,7 +121,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		vscode.window.setStatusBarMessage('Generating your suggestion!');
+		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Generating your suggestion! $(edit)');
 
 		const prompt = `Improve the Original code. 
 		Provde Suggested code and an explanation for why it is better.
@@ -113,8 +141,10 @@ export async function activate(context: vscode.ExtensionContext) {
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
 
 		vscode.window.showInformationMessage(output);
+		statusMessage.dispose();
 	});
 
+	// Directly write a prompt for GPT
 	let askGPT = vscode.commands.registerCommand('GPT.askGPT', async () => {
 		console.log('Running askGPT');
 
@@ -130,7 +160,7 @@ export async function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		vscode.window.setStatusBarMessage('Sending to GPT!');
+		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Sending to GPT! $(hubot)');
 
 		const response = await openai.createCompletion({
 			model: config.model,
@@ -142,6 +172,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
 
 		vscode.window.showInformationMessage(output);
+		statusMessage.dispose();
 	});
 
 
