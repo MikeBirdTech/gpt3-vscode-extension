@@ -38,7 +38,7 @@ Organization is not currently included in requests.
 
 ## Release Notes
 
-### 0.5.0
+### 0.6.0
 Easily configure your extension in preferences
 
 ### 0.4.0
