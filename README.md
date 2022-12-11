@@ -1,9 +1,9 @@
 # GPT Visual Studio Code Extension README
 Use GPT-3 to be a more efficient programmer!
 
+- Write to GPT - ask it anything directly from VS Code
 - Generate documentation for your code
 - Generate suggested alternatives for your code, including an explanation
-- Directly write to GPT - ask it anything directly from VS Code
 
 ---
 
@@ -18,14 +18,21 @@ Use GPT-3 to be a more efficient programmer!
 
 ---
 ## Current functionality
-Running 'Create Documentation' when code is highlighted will generate documentation for that code. It will automatically inject it above the highlighted code.
+### Ask GPT
+Opens a text input box and the value entered will be sent to GPT for processing. The response will appear in a modal.
+Default key binding set to `alt + g`
+
+Status bar item also runs this function.
+
+### Create Documentation
+Generates documentation for highlighted code. It will automatically inject it above the highlighted code.
 Default key binding set to `alt + d`
 
-Running 'Suggest Improvements' will send highlighted code to GPT-3 where it will return suggested code as well as an explanation for why the suggestion is an improvement. The suggested code and explanation will appear in a modal.
+### Suggest Improvements
+Sends highlighted code to GPT-3 where it will return suggested code as well as an explanation for why the suggestion is an improvement. The suggested code and explanation will appear in a modal.
 Default key binding set to `alt + i`
 
-Running 'Ask GPT' will open a text input box and the value entered will be sent to GPT for processing. The response will appear in a modal.
-Default key binding set to `alt + g`
+
 
 ---
 ## Extension Settings
@@ -42,6 +49,8 @@ May need to re-configure credentials if updating from a version older than v0.6.
 
 ## Release Notes
 
+### 0.8.0
+Status bar item to initiate Ask GPT function. Returns more readable modal with a copy output button
 ### 0.7.0
 Optionally include Organization in request to GPT
 

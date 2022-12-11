@@ -21,7 +21,7 @@ const initConfig = () => {
 
 	const org = getConfValue('org');
 
-	if(org) {
+	if (org) {
 		config.organization = org;
 	}
 
@@ -51,7 +51,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	console.log('Activated');
 
 	const config = initConfig();
-	if(!config){
+	if (!config) {
 		return;
 	}
 
@@ -60,6 +60,14 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	const openai = new OpenAIApi(openaiConfig);
+
+	const statusBarItem = vscode.window.createStatusBarItem();
+	statusBarItem.name = "GPT";
+	statusBarItem.text = "Ask GPT $(hubot)";
+	statusBarItem.command = "GPT.askGPT";
+	statusBarItem.tooltip = "Opens a text input for you to send your message to GPT";
+
+	statusBarItem.show();
 
 	// Create documentation for highlighted code
 	let createDocumentation = vscode.commands.registerCommand('GPT.createDocs', async () => {
@@ -73,11 +81,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		const selectedText = editor.document.getText(editor.selection);
 
-		if(!selectedText){
+		if (!selectedText) {
 			vscode.window.showWarningMessage('No selected text');
 			return;
 		}
 
+		statusBarItem.hide();
 		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Generating your documentation! $(book)');
 
 		const prompt = `Write doc comments for the code
@@ -89,7 +98,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 
 		const response = await openai.createCompletion({
-			model:config.model,
+			model: config.model,
 			prompt,
 			max_tokens: config.max_tokens,
 			temperature: config.temperature,
@@ -103,6 +112,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		});
 
 		statusMessage.dispose();
+		statusBarItem.show();
 	});
 
 	// Create a suggested alternative to highlight code with an explanation
@@ -116,11 +126,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		const selectedText = editor.document.getText(editor.selection);
 
-		if(!selectedText){
+		if (!selectedText) {
 			vscode.window.showWarningMessage('No selected text');
 			return;
 		}
 
+		statusBarItem.hide();
 		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Generating your suggestion! $(edit)');
 
 		const prompt = `Improve the Original code. 
@@ -140,8 +151,27 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
 
-		vscode.window.showInformationMessage(output);
+		const mesesageOptions = {
+			"modal": true,
+			"detail": "-GPT"
+		};
+
+		let items = [
+			{
+				"title": 'Copy output'
+			}
+		];
+
+		const gptResponse = vscode.window.showInformationMessage(output, mesesageOptions, ...items);
+
+		gptResponse.then((button) => {
+			if (button?.title === 'Copy output') {
+				vscode.env.clipboard.writeText(output);
+			}
+		});
+
 		statusMessage.dispose();
+		statusBarItem.show();
 	});
 
 	// Directly write a prompt for GPT
@@ -152,14 +182,15 @@ export async function activate(context: vscode.ExtensionContext) {
 			"title": "Ask GPT!",
 			"prompt": "Enter in the text you would like to send to GPT"
 		};
-		
+
 		const prompt = await vscode.window.showInputBox(inputBoxOptions);
 
-		if(!prompt) {
+		if (!prompt) {
 			vscode.window.showWarningMessage('No input received.');
 			return;
 		}
 
+		statusBarItem.hide();
 		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Sending to GPT! $(hubot)');
 
 		const response = await openai.createCompletion({
@@ -171,8 +202,27 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
 
-		vscode.window.showInformationMessage(output);
+		const mesesageOptions = {
+			"modal": true,
+			"detail": "-GPT"
+		};
+
+		let items = [
+			{
+				"title": 'Copy output'
+			}
+		];
+
+		const gptResponse = vscode.window.showInformationMessage(output, mesesageOptions, ...items);
+
+		gptResponse.then((button) => {
+			if (button?.title === 'Copy output') {
+				vscode.env.clipboard.writeText(output);
+			}
+		});
+
 		statusMessage.dispose();
+		statusBarItem.show();
 	});
 
 
