@@ -25,26 +25,23 @@ Default key binding set to `alt + g`
 
 ---
 ## Extension Settings
-Update your `settings.json` file to include the following settings:
+Open preferences to find `GPT` under `extensions`. 
 
-    "GPT.openaiOrg": "org-<id>",
-    "GPT.openaiApiKey": "<API Key>",
-    "GPT.model": "text-davinci-003",
-    "GPT.maxTokens": 250,
-    "GPT.temperature": 0.3,
-
-Values can be updated to match your preferences.
+You will need to insert your API Key and update other parameters for your queries
 
 ---
 
 ## Known Issues
-Things are just getting started
+Organization is not currently included in requests.
 
 ---
 
 ## Release Notes
 
-### 0.3.0
+### 0.6.0
+Easily configure your extension in preferences
+
+### 0.4.0
 Send GPT text directly. Ask a question or get clarity in your own words, without leaving your editor.
 
 ### 0.2.0

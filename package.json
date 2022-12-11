@@ -2,7 +2,7 @@
   "name": "gpt3-vscode-extension",
   "displayName": "GPT A.I. Coding Assistant",
   "description": "Use GPT-3 to improve your code and generate documentation!",
-  "version": "0.3.0",
+  "version": "0.6.0",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -41,6 +41,36 @@
         "icon": "$(star)"
       }
     ],
+    "configuration": {
+      "title": "GPT",
+      "properties": {
+        "GPT.org": {
+          "type": "string",
+          "default": null,
+          "markdownDescription": "The [organization](https://beta.openai.com/account/org-settings) value from OpenAI"
+        },
+        "GPT.apiKey": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "The [API Key](https://beta.openai.com/account/api-keys) from OpenAI"
+        },
+        "GPT.model": {
+          "type": "string",
+          "default": "text-davinci-003",
+          "markdownDescription": "The OpenAI [model](https://beta.openai.com/docs/models) to use"
+        },
+        "GPT.maxTokens": {
+          "type": "number",
+          "default": 250,
+          "markdownDescription": "The maximum number of [tokens](https://beta.openai.com/docs/introduction/overview) for each request to GPT"
+        },
+        "GPT.temperature": {
+          "type": "number",
+          "default": 0.3,
+          "markdownDescription": "The [temperature](https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature) of each request to GPT. Must be between 0 and 1"
+        }
+      }
+    },
     "keybindings": [
       {
         "command": "GPT.createDocs",
