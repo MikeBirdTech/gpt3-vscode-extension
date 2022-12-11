@@ -8,7 +8,10 @@
   },
   "categories": [
     "Other",
-    "Machine Learning"
+    "Machine Learning",
+    "Education",
+    "Testing",
+    "Debuggers"
   ],
   "keywords": [
     "AI",
@@ -18,6 +21,7 @@
     "GPT"
   ],
   "activationEvents": [
+    "onStartupFinished",
     "onCommand:GPT.createDocs",
     "onCommand:GPT.suggestImprovement",
     "onCommand:GPT.askGPT"
@@ -130,5 +134,8 @@
   },
   "pricing": "Free",
   "publisher": "Arrendy",
-  "icon": "images/icon.png"
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#D79D58"
+  }
 }
