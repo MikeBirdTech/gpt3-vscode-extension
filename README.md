@@ -1,6 +1,10 @@
 # GPT Visual Studio Code Extension README
 Use GPT-3 to be a more efficient programmer!
 
+- Generate documentation for your code
+- Generate suggested alternatives for your code, including an explanation
+- Directly write to GPT - ask it anything directly from VS Code
+
 ---
 
 ## Requirements
@@ -27,16 +31,19 @@ Default key binding set to `alt + g`
 ## Extension Settings
 Open preferences to find `GPT` under `extensions`. 
 
-You will need to insert your API Key and update other parameters for your queries
+You will need to insert your API Key and update other parameters for your queries. Links for documentation are included for the meaning of each value.
 
 ---
 
 ## Known Issues
-Organization is not currently included in requests.
+May need to re-configure credentials if updating from a version older than v0.6.0
 
 ---
 
 ## Release Notes
+
+### 0.7.0
+Optionally include Organization in request to GPT
 
 ### 0.6.0
 Easily configure your extension in preferences
