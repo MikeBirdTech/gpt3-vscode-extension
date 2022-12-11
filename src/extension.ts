@@ -8,9 +8,9 @@ const initConfig = () => {
 		"model": getConfValue('model'),
 		"max_tokens": getConfValue<number>('maxTokens'),
 		"temperature": getConfValue<number>('temperature'),
-		"organization":getConfValue('openaiOrg'),
-		"apiKey": getConfValue('openaiApiKey')
-	}
+		"organization":getConfValue('org'),
+		"apiKey": getConfValue('apiKey')
+	};
 
 	if (!config.temperature || config.temperature < 0 || config.temperature > 1) {
 		vscode.window.showInformationMessage("Temperature must be between 0 and 1, please update your settings");
@@ -18,7 +18,7 @@ const initConfig = () => {
 	}
 
 	return config;
-}
+};
 
 // This method is called when the extension is activated
 // The extension is activated the very first time the command is executed
@@ -31,7 +31,6 @@ export async function activate(context: vscode.ExtensionContext) {
 	}
 
 	const openaiConfig = new Configuration({
-		organization: config.organization,
 		apiKey: config.apiKey
 	});
 
@@ -46,9 +45,14 @@ export async function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		vscode.window.showInformationMessage('Generating your documentation!');
-
 		const selectedText = editor.document.getText(editor.selection);
+
+		if(!selectedText){
+			vscode.window.showWarningMessage('No selected text');
+			return;
+		}
+
+		vscode.window.setStatusBarMessage('Generating your documentation!');
 
 		const prompt = `Write doc comments for the code
 			Code: 
@@ -81,10 +85,15 @@ export async function activate(context: vscode.ExtensionContext) {
 		if (!editor) {
 			return;
 		}
-    
-		vscode.window.showInformationMessage('Generating your suggestion!');
 
 		const selectedText = editor.document.getText(editor.selection);
+
+		if(!selectedText){
+			vscode.window.showWarningMessage('No selected text');
+			return;
+		}
+
+		vscode.window.setStatusBarMessage('Generating your suggestion!');
 
 		const prompt = `Improve the Original code. 
 		Provde Suggested code and an explanation for why it is better.
@@ -112,16 +121,16 @@ export async function activate(context: vscode.ExtensionContext) {
 		const inputBoxOptions = {
 			"title": "Ask GPT!",
 			"prompt": "Enter in the text you would like to send to GPT"
-		}
+		};
 		
 		const prompt = await vscode.window.showInputBox(inputBoxOptions);
 
 		if(!prompt) {
-			vscode.window.showInformationMessage('No input received.');
+			vscode.window.showWarningMessage('No input received.');
 			return;
 		}
 
-		vscode.window.showInformationMessage('Sending to GPT!');
+		vscode.window.setStatusBarMessage('Sending to GPT!');
 
 		const response = await openai.createCompletion({
 			model: config.model,
