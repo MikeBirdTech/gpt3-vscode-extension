@@ -64,6 +64,9 @@ May need to re-configure credentials if updating from a older version prior to m
 
 ## Release Notes
 
+### 0.10.0
+Create code from documentation
+
 ### 0.9.0
 API Key in secret storage
 
