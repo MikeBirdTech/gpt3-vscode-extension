@@ -1,6 +1,6 @@
 {
   "name": "gpt3-vscode-extension",
-  "displayName": "GPT A.I. Coding Assistant",
+  "displayName": "GPT-3 A.I. Coding Assistant",
   "description": "Use GPT-3 to improve your code and generate documentation!",
   "version": "0.8.0",
   "engines": {
@@ -43,6 +43,16 @@
         "command": "GPT.askGPT",
         "title": "Ask GPT",
         "icon": "$(star)"
+      },
+      {
+        "command": "GPT.updateAPIKey",
+        "title": "Update OpenAI API Key",
+        "icon": "$(pencil)"
+      },
+      {
+        "command": "GPT.removeAPIKey",
+        "title": "Remove OpenAI API Key from secret storage",
+        "icon": "$(error)"
       }
     ],
     "configuration": {
@@ -53,11 +63,6 @@
           "default": null,
           "markdownDescription": "The [organization](https://beta.openai.com/account/org-settings) value from OpenAI"
         },
-        "GPT.apiKey": {
-          "type": "string",
-          "default": "",
-          "markdownDescription": "The [API Key](https://beta.openai.com/account/api-keys) from OpenAI"
-        },
         "GPT.model": {
           "type": "string",
           "default": "text-davinci-003",
@@ -66,6 +71,7 @@
         "GPT.maxTokens": {
           "type": "number",
           "default": 250,
+          "minimum": 1,
           "markdownDescription": "The maximum number of [tokens](https://beta.openai.com/docs/introduction/overview) for each request to GPT"
         },
         "GPT.temperature": {
