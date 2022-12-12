@@ -167,6 +167,55 @@ export async function activate(context: vscode.ExtensionContext) {
 		statusBarItem.show();
 	});
 
+	// Create code for highlighted documentation
+	let createCodeFromDocumentation = vscode.commands.registerCommand('GPT.createCodeFromDocs', async () => {
+		console.log('Running createCodeFromDocs');
+
+		const editor = vscode.window.activeTextEditor;
+
+		if (!editor) {
+			return;
+		}
+
+		const selectedText = editor.document.getText(editor.selection);
+
+		if (!selectedText) {
+			vscode.window.showWarningMessage('No selected text');
+			return;
+		}
+
+		let activeFile = editor.document.fileName;
+		let filePathParts = activeFile.split('.');
+		let fileExtension = filePathParts[filePathParts.length - 1];
+
+		statusBarItem.hide();
+		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Generating your code! $(code)');
+
+		const prompt = `Write ${fileExtension} code to accomplish the goal of these doc comments
+				Doc comments: 
+				${selectedText}
+				
+				Code:
+				`;
+
+		const response = await openai.createCompletion({
+			model: config.model,
+			prompt,
+			max_tokens: config.max_tokens,
+			temperature: config.temperature,
+		});
+
+		const output = response.data.choices[0].text?.trim();
+
+		// Insert the text at the start of the selection
+		editor.edit((editBuilder) => {
+			editBuilder.insert(editor.selection.end, `\n${output}`);
+		});
+
+		statusMessage.dispose();
+		statusBarItem.show();
+	});
+
 	// Create a suggested alternative to highlight code with an explanation
 	let suggestImprovement = vscode.commands.registerCommand('GPT.suggestImprovement', async () => {
 		console.log('Running suggestImprovement');
@@ -305,6 +354,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 
 	context.subscriptions.push(createDocumentation);
+	context.subscriptions.push(createCodeFromDocumentation);
 	context.subscriptions.push(suggestImprovement);
 	context.subscriptions.push(askGPT);
 	context.subscriptions.push(updateAPIKey);
