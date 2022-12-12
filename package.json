@@ -35,6 +35,11 @@
         "icon": "$(hubot)"
       },
       {
+        "command": "GPT.createCodeFromDocs",
+        "title": "Create code from docs",
+        "icon": "$(check)"
+      },
+      {
         "command": "GPT.suggestImprovement",
         "title": "Suggest Improvements",
         "icon": "$(rocket)"
@@ -100,6 +105,12 @@
         "command": "GPT.askGPT",
         "key": "alt+g",
         "mac": "option+g",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "GPT.createCodeFromDocs",
+        "key": "alt+x",
+        "mac": "option+x",
         "when": "editorTextFocus"
       }
     ]

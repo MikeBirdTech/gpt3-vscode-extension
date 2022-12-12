@@ -1,7 +1,8 @@
-# GPT-3 Visual Studio Code Extension
+# 🤖 GPT-3 Visual Studio Code Extension
 Use GPT-3 to be a more efficient programmer!
 
 - ✏️ Write to GPT - ask it anything directly from VS Code
+- 💻 Generate code from your documentation
 - 📖 Generate documentation for your code
 - 💡 Generate suggested alternatives for your code, including an explanation
 
@@ -13,28 +14,35 @@ Use GPT-3 to be a more efficient programmer!
 
 ---
 ## Requirements
-Enter your [OpenAI API Key](https://beta.openai.com/signup) into a secret storage prompt.
+Get your [OpenAI API key](https://beta.openai.com/signup).
+
+When the extension is installed, a prompt will appear for you to enter in your API key.
 
 ⚠️ **NOTE**: Some extensions ask you to store your API Key in settings.json - this is **not secure** ⚠️
 
-All extensions can read the entire contents of `settings.json`. If you store your API Key in plain text, a malicious extension can easily access it. To protect your API Key, you **must** store it in secret storage to prevent other extensions from accessing it.
+All extensions can read the entire contents of `settings.json`. If you store your API Key in plain text, a malicious extension can easily access it. To protect your API Key, you **must** store it in secret storage to prevent other extensions from accessing it. This extension uses secret storage for API keys.
 
 --- 
 
 ## Current functionality
-### Ask GPT
+### 🦄 Ask GPT 🦄
 Opens a text input box and the value entered will be sent to GPT for processing. The response will appear in a modal.
 
 > Default key binding set to `alt + g`
 
 > Status bar item also runs this function.
 
-### Create Documentation
-Generates documentation for highlighted code. It will automatically inject it above the highlighted code.
+### 🎉 Create Code from Documentation 🎉
+Generates code for highlighted documentation. It will automatically inject the code below the highlighted docs.
+
+> Default key binding set to `alt + x`
+
+### 🔥 Create Documentation from Code 🔥
+Generates documentation for highlighted code. It will automatically inject the docs above the highlighted code.
 
 > Default key binding set to `alt + d`
 
-### Suggest Improvements
+### 💯 Suggest Improvements 💯
 Sends highlighted code to GPT-3 where it will return suggested code as well as an explanation for why the suggestion is an improvement. The suggested code and explanation will appear in a modal.
 
 > Default key binding set to `alt + i`
@@ -50,7 +58,7 @@ You will need to insert your API Key and update other parameters for your querie
 ---
 
 ## Known Issues
-May need to re-configure credentials if updating from a version older than v0.6.0
+May need to re-configure credentials if updating from a older version prior to major release.
 
 ---
 
