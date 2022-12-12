@@ -47,8 +47,6 @@ Sends highlighted code to GPT-3 where it will return suggested code as well as a
 
 > Default key binding set to `alt + i`
 
-
-
 ---
 ## Extension Settings
 Open preferences to find `GPT` under `extensions`. 
