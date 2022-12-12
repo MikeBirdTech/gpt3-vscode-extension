@@ -103,6 +103,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const config = await initConfig(context);
 	if (!config) {
 		deactivate();
+    
 		return;
 	}
 

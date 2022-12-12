@@ -61,6 +61,7 @@ API Key in secret storage
 
 ### 0.8.0
 Status bar item to initiate Ask GPT function. Returns more readable modal with a copy output button
+
 ### 0.7.0
 Optionally include Organization in request to GPT
 
