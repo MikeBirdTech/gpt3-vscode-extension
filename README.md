@@ -55,9 +55,12 @@ You will need to insert your API Key and update other parameters for your querie
 
 ---
 
-## Known Issues
-May need to re-configure credentials if updating from a older version prior to major release.
+## FAQ
+👽 How can I reset my API key if I entered the wrong one?
 
+> - Open command palete and run `Update OpenAI API Key`
+> - Enter your correct API Key into the prompt 
+> - Reload the window
 ---
 
 ## Release Notes
