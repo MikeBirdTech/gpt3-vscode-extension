@@ -85,6 +85,24 @@
           "minimum": 0,
           "maximum": 1,
           "markdownDescription": "The [temperature](https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature) of each request to GPT. Must be between 0 and 1"
+        },
+        "GPT.codeModel": {
+          "type": "string",
+          "default": "code-davinci-002",
+          "markdownDescription": "The OpenAI [model](https://beta.openai.com/docs/models) to use"
+        },
+        "GPT.codeMaxTokens": {
+          "type": "number",
+          "default": 250,
+          "minimum": 1,
+          "markdownDescription": "The maximum number of [tokens](https://beta.openai.com/docs/introduction/overview) for each request to GPT"
+        },
+        "GPT.codeTemperature": {
+          "type": "number",
+          "default": 0.1,
+          "minimum": 0,
+          "maximum": 1,
+          "markdownDescription": "The [temperature](https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature) of each request to GPT. Must be between 0 and 1"
         }
       }
     },

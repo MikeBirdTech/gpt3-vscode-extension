@@ -1,125 +1,47 @@
 import * as vscode from 'vscode';
 import { Configuration, OpenAIApi } from "openai";
+import {
+	initAuth,
+	createPayload,
+	validatePayload,
+	setNewAPIKey,
+	getFileExtension,
+	buildStatusBarItem,
+	Config,
+	OPENAI_API_KEY
+} from './utils';
 
-interface Config {
-	model: string,
-	max_tokens: number,
-	temperature: number,
-	apiKey: string,
-	organization?: string
-}
+const COPY_OUTPUT = "Copy Output";
 
+const initOpenAI = (credentials: Config): OpenAIApi => {
+	const openaiConfig = new Configuration({
+		...credentials
+	});
 
-const getConfValue = <T = string>(key: string) => vscode.workspace.getConfiguration('GPT').get(key) as T;
-
-const initConfig = async (context: vscode.ExtensionContext) => {
-	console.log('init');
-
-	let apiKey = await context.secrets.get('OPENAI_API_KEY');
-
-	if (!apiKey) {
-		console.log("API Key doesn't exist in secret storage");
-
-		apiKey = await setNewAPIKey(context);
-	}
-
-
-	const config: Config = {
-		"model": getConfValue('model'),
-		"max_tokens": getConfValue<number>('maxTokens'),
-		"temperature": getConfValue<number>('temperature'),
-		"apiKey": apiKey,
-	};
-
-	let org = getConfValue('org');
-
-	if (org) {
-		config.organization = org;
-	}
-
-	let { isValid, reason } = validateConfig(config);
-
-	if (!isValid) {
-		vscode.window.showErrorMessage(reason);
-		return;
-	}
-
-	return config;
-};
-
-const setNewAPIKey = async (context: vscode.ExtensionContext): Promise<string> => {
-	const inputBoxOptions = {
-		title: "Please enter your OpenAI API Key",
-		prompt: "Store your API Key in secret storage",
-		password: true,
-		ignoreFocusOut: true
-	};
-
-	const secret = await vscode.window.showInputBox(inputBoxOptions);
-
-	if (!secret) {
-		vscode.window.showWarningMessage('No API Key received.');
-
-		return "";
-	}
-
-	await context.secrets.store('OPENAI_API_KEY', secret);
-
-	return secret;
-};
-
-const validateConfig = (config: Config) => {
-	let reason = "";
-	let isValid = true;
-
-	if (config.apiKey === "") {
-		reason = "API Key cannot be an empty string, please reload window and enter API Key";
-		isValid = false;
-	}
-
-	if (!config.temperature || config.temperature < 0 || config.temperature > 1) {
-		reason = "Temperature must be between 0 and 1, please update your settings";
-		isValid = false;
-	}
-
-	if (!config.max_tokens || config.max_tokens < 1 || config.max_tokens >= 4000) {
-		reason = "Max tokens must be between 1 and 4000, please update your settings";
-		isValid = false;
-	}
-
-	if (!config.model) {
-		reason = "GPT Model missing, please update your settings";
-		isValid = false;
-	}
-	console.log(`isValid: ${isValid}, reason: ${reason}`);
-
-	return { isValid, reason };
+	return new OpenAIApi(openaiConfig);
 };
 
 // This method is called when the extension is activated
 export async function activate(context: vscode.ExtensionContext) {
 	console.log('Activated');
 
-	const config = await initConfig(context);
-	if (!config) {
+	const credentials = await initAuth(context);
+	if (!credentials) {
 		deactivate();
-    
+
 		return;
 	}
 
-	const openaiConfig = new Configuration({
-		...config
-	});
+	const openai = initOpenAI(credentials);
 
-	const openai = new OpenAIApi(openaiConfig);
-
-	const statusBarItem = vscode.window.createStatusBarItem();
-	statusBarItem.name = "GPT";
-	statusBarItem.text = "Ask GPT $(hubot)";
-	statusBarItem.command = "GPT.askGPT";
-	statusBarItem.tooltip = "Opens a text input for you to send your message to GPT";
+	const statusBarItem = buildStatusBarItem();
 
 	statusBarItem.show();
+
+	const modalMesesageOptions = {
+		"modal": true,
+		"detail": "- GPT-3"
+	};
 
 	// Create documentation for highlighted code
 	let createDocumentation = vscode.commands.registerCommand('GPT.createDocs', async () => {
@@ -138,23 +60,27 @@ export async function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
+		let fileExtension = getFileExtension(editor.document.fileName);
+
 		statusBarItem.hide();
 		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Generating your documentation! $(book)');
 
-		const prompt = `Write doc comments for the code
-			Code: 
-			${selectedText}
+		const prompt = `Write ${fileExtension} doc comments for the code
+Code: 
+${selectedText}
 			
-			Doc comments:
-			`;
+Doc comments:
+`;
 
+		let payload = createPayload('text', prompt);
+		let { isValid, reason } = validatePayload(payload);
 
-		const response = await openai.createCompletion({
-			model: config.model,
-			prompt,
-			max_tokens: config.max_tokens,
-			temperature: config.temperature,
-		});
+		if (!isValid) {
+			vscode.window.showErrorMessage(reason);
+			deactivate();
+		};
+
+		const response = await openai.createCompletion({ ...payload });
 
 		const output = response.data.choices[0].text?.trim();
 
@@ -184,26 +110,28 @@ export async function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		let activeFile = editor.document.fileName;
-		let filePathParts = activeFile.split('.');
-		let fileExtension = filePathParts[filePathParts.length - 1];
+		let fileExtension = getFileExtension(editor.document.fileName);
 
 		statusBarItem.hide();
 		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Generating your code! $(code)');
 
-		const prompt = `Write ${fileExtension} code to accomplish the goal of these doc comments
-				Doc comments: 
-				${selectedText}
+		const prompt = `Write ${fileExtension} code to satisfy these doc comments. 
+Doc comments: 
+${selectedText}
 				
-				Code:
-				`;
+Code:
+`;
 
-		const response = await openai.createCompletion({
-			model: config.model,
-			prompt,
-			max_tokens: config.max_tokens,
-			temperature: config.temperature,
-		});
+
+		let payload = createPayload('code', prompt);
+		let { isValid, reason } = validatePayload(payload);
+
+		if (!isValid) {
+			vscode.window.showErrorMessage(reason);
+			deactivate();
+		};
+
+		const response = await openai.createCompletion({ ...payload });
 
 		const output = response.data.choices[0].text?.trim();
 
@@ -232,41 +160,41 @@ export async function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
+		let fileExtension = getFileExtension(editor.document.fileName);
+
 		statusBarItem.hide();
 		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Generating your suggestion! $(edit)');
 
-		const prompt = `Improve the Original code. 
-		Provde Suggested code and an explanation for why it is better.
-		Original code: 
-		${selectedText}
+		const prompt = `Improve the Original ${fileExtension} code. 
+Provde Suggested ${fileExtension} code and an explanation for why it is better.
+Original code: 
+${selectedText}
 
-		Suggested code:
-		`;
+Suggested code:
+`;
 
-		const response = await openai.createCompletion({
-			model: config.model,
-			prompt,
-			max_tokens: config.max_tokens,
-			temperature: config.temperature,
-		});
+		let payload = createPayload('text', prompt);
+		let { isValid, reason } = validatePayload(payload);
+
+		if (!isValid) {
+			vscode.window.showErrorMessage(reason);
+			deactivate();
+		};
+
+		const response = await openai.createCompletion({ ...payload });
 
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
 
-		const mesesageOptions = {
-			"modal": true,
-			"detail": "-GPT"
-		};
-
 		let items = [
 			{
-				"title": 'Copy output'
+				"title": COPY_OUTPUT
 			}
 		];
 
-		const gptResponse = vscode.window.showInformationMessage(output, mesesageOptions, ...items);
+		const gptResponse = vscode.window.showInformationMessage(output, modalMesesageOptions, ...items);
 
 		gptResponse.then((button) => {
-			if (button?.title === 'Copy output') {
+			if (button?.title === COPY_OUTPUT) {
 				vscode.env.clipboard.writeText(output);
 			}
 		});
@@ -294,30 +222,28 @@ export async function activate(context: vscode.ExtensionContext) {
 		statusBarItem.hide();
 		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Sending to GPT! $(hubot)');
 
-		const response = await openai.createCompletion({
-			model: config.model,
-			prompt,
-			max_tokens: config.max_tokens,
-			temperature: config.temperature,
-		});
+		let payload = createPayload('text', prompt);
+		let { isValid, reason } = validatePayload(payload);
+
+		if (!isValid) {
+			vscode.window.showErrorMessage(reason);
+			deactivate();
+		};
+
+		const response = await openai.createCompletion({ ...payload });
 
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
 
-		const mesesageOptions = {
-			"modal": true,
-			"detail": "-GPT"
-		};
-
 		let items = [
 			{
-				"title": 'Copy output'
+				"title": COPY_OUTPUT
 			}
 		];
 
-		const gptResponse = vscode.window.showInformationMessage(output, mesesageOptions, ...items);
+		const gptResponse = vscode.window.showInformationMessage(output, modalMesesageOptions, ...items);
 
 		gptResponse.then((button) => {
-			if (button?.title === 'Copy output') {
+			if (button?.title === COPY_OUTPUT) {
 				vscode.env.clipboard.writeText(output);
 			}
 		});
@@ -346,20 +272,22 @@ export async function activate(context: vscode.ExtensionContext) {
 		statusBarItem.hide();
 		const statusMessage = vscode.window.setStatusBarMessage('$(heart) Securely REMOVING your API Key $(error)');
 
-		await context.secrets.delete('OPENAI_API_KEY');
+		await context.secrets.delete(OPENAI_API_KEY);
 
 		statusMessage.dispose();
 		statusBarItem.show();
 	});
 
 
-	context.subscriptions.push(createDocumentation);
-	context.subscriptions.push(createCodeFromDocumentation);
-	context.subscriptions.push(suggestImprovement);
-	context.subscriptions.push(askGPT);
-	context.subscriptions.push(updateAPIKey);
-	context.subscriptions.push(removeAPIKey);
-}
+	context.subscriptions.push(
+		createDocumentation,
+		createCodeFromDocumentation,
+		suggestImprovement,
+		askGPT,
+		updateAPIKey,
+		removeAPIKey
+	);
+};
 
 // This method is called when your extension is deactivated
 export function deactivate() { }

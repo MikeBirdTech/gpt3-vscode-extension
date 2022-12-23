@@ -26,8 +26,6 @@ This extension uses secret storage for API keys.
 
 All extensions can read the contents of `settings.json`. If your API key is stored there, a malicious extension can easily access it. To protect your API key, it **must** be stored in secret storage. 
 
----
-
 
 ## Current functionality
 ### 🦄 Ask GPT 🦄
