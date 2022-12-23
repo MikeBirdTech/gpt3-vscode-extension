@@ -26,6 +26,8 @@ This extension uses secret storage for API keys.
 
 All extensions can read the contents of `settings.json`. If your API key is stored there, a malicious extension can easily access it. To protect your API key, it **must** be stored in secret storage. 
 
+---
+
 
 ## Current functionality
 ### 🦄 Ask GPT 🦄
@@ -66,6 +68,9 @@ Sends highlighted code to GPT-3 for potential improvements. Suggested code and e
 ---
 
 ## Release Notes
+
+### 0.11.0
+Option to set different values for code vs text completion settings (models, temperature, max tokens)
 
 ### 0.10.0
 Create code from documentation
