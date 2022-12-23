@@ -2,7 +2,7 @@
   "name": "gpt3-vscode-extension",
   "displayName": "GPT-3 A.I. Coding Assistant",
   "description": "Use GPT-3 in VS Code! Generate code, documentation, code reviews, and more!",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "engines": {
     "vscode": "^1.74.0"
   },
