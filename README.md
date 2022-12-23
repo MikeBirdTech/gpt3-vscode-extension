@@ -20,7 +20,7 @@ When the extension is installed, a prompt will appear for you to enter in your A
 
 ⚠️ **NOTE**: Some extensions ask you to store your API Key in settings.json - this is **not secure** ⚠️
 
-All extensions can read the entire contents of `settings.json`. If you store your API Key in plain text, a malicious extension can easily access it. To protect your API Key, you **must** store it in secret storage to prevent other extensions from accessing it. This extension uses secret storage for API keys.
+All extensions can read the entire contents of `settings.json`. If you store your API Key in plain text, a malicious extension can easily access it. To protect your API Key, you **must** store it in secret storage to prevent other extensions from accessing it. This extension uses [secret storage](https://code.visualstudio.com/api/references/vscode-api#SecretStorage) for API keys.
 
 --- 
 
