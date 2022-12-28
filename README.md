@@ -69,6 +69,9 @@ Sends highlighted code to GPT-3 for potential improvements. Suggested code and e
 
 ## Release Notes
 
+### 0.12.0
+Added check if completion exceeds max_token values. Alert user how to resolve.
+
 ### 0.11.0
 Option to set different values for code vs text completion settings (models, temperature, max tokens)
 
