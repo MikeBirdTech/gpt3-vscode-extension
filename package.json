@@ -61,7 +61,7 @@
       }
     ],
     "configuration": {
-      "title": "GPT",
+      "title": "GPT-3",
       "properties": {
         "GPT.org": {
           "type": "string",
@@ -71,38 +71,38 @@
         "GPT.model": {
           "type": "string",
           "default": "text-davinci-003",
-          "markdownDescription": "The OpenAI [model](https://beta.openai.com/docs/models) to use"
+          "markdownDescription": "The OpenAI [model](https://beta.openai.com/docs/models) to use for text completions"
         },
         "GPT.maxTokens": {
           "type": "number",
           "default": 250,
           "minimum": 1,
-          "markdownDescription": "The maximum number of [tokens](https://beta.openai.com/docs/introduction/overview) for each request to GPT"
+          "markdownDescription": "The maximum number of [tokens](https://beta.openai.com/docs/introduction/overview) for each text request to GPT"
         },
         "GPT.temperature": {
           "type": "number",
           "default": 0.3,
           "minimum": 0,
           "maximum": 1,
-          "markdownDescription": "The [temperature](https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature) of each request to GPT. Must be between 0 and 1"
+          "markdownDescription": "The [temperature](https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature) of each text request to GPT. Must be between 0 and 1"
         },
         "GPT.codeModel": {
           "type": "string",
           "default": "code-davinci-002",
-          "markdownDescription": "The OpenAI [model](https://beta.openai.com/docs/models) to use"
+          "markdownDescription": "The OpenAI [model](https://beta.openai.com/docs/models) to use for code completions"
         },
         "GPT.codeMaxTokens": {
           "type": "number",
           "default": 250,
           "minimum": 1,
-          "markdownDescription": "The maximum number of [tokens](https://beta.openai.com/docs/introduction/overview) for each request to GPT"
+          "markdownDescription": "The maximum number of [tokens](https://beta.openai.com/docs/introduction/overview) for each code request to GPT"
         },
         "GPT.codeTemperature": {
           "type": "number",
           "default": 0.1,
           "minimum": 0,
           "maximum": 1,
-          "markdownDescription": "The [temperature](https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature) of each request to GPT. Must be between 0 and 1"
+          "markdownDescription": "The [temperature](https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature) of each code request to GPT. Must be between 0 and 1"
         }
       }
     },
@@ -156,7 +156,7 @@
     "eslint": "^8.28.0",
     "glob": "^8.0.3",
     "mocha": "^10.1.0",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "author": "Mike Bird",
   "license": "GPL-3.0-or-later",

@@ -84,6 +84,10 @@ Doc comments:
 
 		const output = response.data.choices[0].text?.trim();
 
+		if(response.data.usage?.total_tokens && response.data.usage?.total_tokens >= payload.max_tokens) {
+			vscode.window.showErrorMessage(`The completion was ${response.data.usage?.total_tokens} tokens and exceeds your max_token value of ${payload.max_tokens}. Please increase your settings to allow for longer completions.`);
+		}
+
 		// Insert the text at the start of the selection
 		editor.edit((editBuilder) => {
 			editBuilder.insert(editor.selection.start, `${output}\n`);
@@ -135,6 +139,10 @@ Code:
 
 		const output = response.data.choices[0].text?.trim();
 
+		if(response.data.usage?.total_tokens && response.data.usage?.total_tokens >= payload.max_tokens) {
+			vscode.window.showErrorMessage(`The completion was ${response.data.usage?.total_tokens} tokens and exceeds your max_token value of ${payload.max_tokens}. Please increase your settings to allow for longer completions.`);
+		}
+
 		// Insert the text at the start of the selection
 		editor.edit((editBuilder) => {
 			editBuilder.insert(editor.selection.end, `\n${output}`);
@@ -182,6 +190,10 @@ Suggested code:
 		};
 
 		const response = await openai.createCompletion({ ...payload });
+
+		if(response.data.usage?.total_tokens && response.data.usage?.total_tokens >= payload.max_tokens) {
+			vscode.window.showErrorMessage(`The completion was ${response.data.usage?.total_tokens} tokens and exceeds your max_token value of ${payload.max_tokens}. Please increase your settings to allow for longer completions.`);
+		}
 
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
 
@@ -231,6 +243,10 @@ Suggested code:
 		};
 
 		const response = await openai.createCompletion({ ...payload });
+
+		if(response.data.usage?.total_tokens && response.data.usage?.total_tokens >= payload.max_tokens) {
+			vscode.window.showErrorMessage(`The completion was ${response.data.usage?.total_tokens} tokens and exceeds your max_token value of ${payload.max_tokens}. Please increase your settings to allow for longer completions.`);
+		}
 
 		const output = response.data.choices[0].text?.trim() || "A response is not available right now.";
 
