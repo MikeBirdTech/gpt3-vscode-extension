@@ -110,25 +110,25 @@
       {
         "command": "GPT.createDocs",
         "key": "alt+d",
-        "mac": "option+d",
+        "mac": "ctrl + ]",
         "when": "editorTextFocus"
       },
       {
         "command": "GPT.suggestImprovement",
         "key": "alt+i",
-        "mac": "option+i",
+        "mac": "ctrl + [",
         "when": "editorTextFocus"
       },
       {
         "command": "GPT.askGPT",
         "key": "alt+g",
-        "mac": "option+g",
+        "mac": "ctrl + '",
         "when": "editorTextFocus"
       },
       {
         "command": "GPT.createCodeFromDocs",
         "key": "alt+x",
-        "mac": "option+x",
+        "mac": "ctrl + \\",
         "when": "editorTextFocus"
       }
     ]
